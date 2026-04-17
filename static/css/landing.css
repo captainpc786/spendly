@@ -1,0 +1,238 @@
+/* ------------------------------------------------------------------ */
+/* Hero v2 — landing page only                                         */
+/* Overrides only the .hero-v2 section; rest of site is untouched.    */
+/* ------------------------------------------------------------------ */
+
+/* Layout: single-column, centered */
+.hero.hero-v2 {
+    display: block;
+    padding: 4rem 2rem 3rem;
+    background: var(--paper);
+}
+
+.hero-v2-inner {
+    max-width: 700px;
+    margin: 0 auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* Badge                                                               */
+/* ------------------------------------------------------------------ */
+
+.hero-v2-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    background: #d6f0e0;
+    color: #1a6b3c;
+    font-size: 0.82rem;
+    font-weight: 500;
+    padding: 0.35rem 1rem;
+    border-radius: 999px;
+    margin-bottom: 1.75rem;
+}
+
+.hero-v2-dot {
+    font-size: 0.5rem;
+    color: #2d9b5a;
+    line-height: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* Heading                                                             */
+/* ------------------------------------------------------------------ */
+
+.hero-v2-title {
+    font-family: var(--font-body);
+    font-size: clamp(2.6rem, 5.5vw, 4rem);
+    font-weight: 700;
+    line-height: 1.1;
+    letter-spacing: -0.03em;
+    color: var(--ink);
+    margin-bottom: 1.25rem;
+}
+
+.hero-v2-title-green {
+    color: #2d9b5a;
+}
+
+/* ------------------------------------------------------------------ */
+/* Subtitle                                                            */
+/* ------------------------------------------------------------------ */
+
+.hero-v2-subtitle {
+    font-size: 1.05rem;
+    color: var(--ink-muted);
+    line-height: 1.7;
+    margin-bottom: 0.9rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Plus divider                                                        */
+/* ------------------------------------------------------------------ */
+
+.hero-v2-plus {
+    font-size: 1.3rem;
+    color: var(--ink-faint);
+    margin-bottom: 0.9rem;
+    line-height: 1;
+}
+
+/* ------------------------------------------------------------------ */
+/* CTA Buttons                                                         */
+/* ------------------------------------------------------------------ */
+
+.hero-v2-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: center;
+    margin-bottom: 3rem;
+    flex-wrap: wrap;
+}
+
+.btn-hero-dark {
+    display: inline-block;
+    background: #0f0f0f;
+    color: #ffffff;
+    padding: 0.75rem 1.75rem;
+    border-radius: 999px;
+    font-family: var(--font-body);
+    font-size: 0.95rem;
+    font-weight: 600;
+    cursor: pointer;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.15s;
+    white-space: nowrap;
+}
+
+.btn-hero-dark:hover {
+    background: #2d2d2d;
+    transform: translateY(-1px);
+}
+
+/* ------------------------------------------------------------------ */
+/* Mock Dashboard                                                      */
+/* ------------------------------------------------------------------ */
+
+.hero-v2-dashboard {
+    width: 100%;
+    max-width: 640px;
+    background: #f1f2f4;
+    border-radius: 16px;
+    padding: 1.25rem 1.5rem 1.5rem;
+    box-shadow: 0 4px 32px rgba(0,0,0,0.07);
+}
+
+/* Browser-style traffic light dots */
+.dash-titlebar {
+    display: flex;
+    gap: 0.4rem;
+    margin-bottom: 1.25rem;
+}
+
+.dash-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.dash-dot-red    { background: #ff5f57; }
+.dash-dot-yellow { background: #ffbd2e; }
+.dash-dot-green  { background: #28c840; }
+
+/* Stat cards row */
+.dash-stats {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.75rem;
+    margin-bottom: 1.25rem;
+}
+
+.dash-stat-card {
+    background: #ffffff;
+    border-radius: 10px;
+    padding: 0.9rem 1rem;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.2rem;
+    text-align: left;
+}
+
+.dash-stat-label {
+    font-size: 0.78rem;
+    color: #888;
+    font-weight: 400;
+}
+
+.dash-stat-value {
+    font-size: 1.4rem;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.dash-stat-sub {
+    font-size: 0.78rem;
+    color: #888;
+}
+
+.dash-stat-red   { color: #e0483a; }
+.dash-stat-green { color: #2d9b5a; }
+
+/* Category progress bars */
+.dash-bars {
+    display: flex;
+    flex-direction: column;
+    gap: 0.7rem;
+}
+
+.dash-bar-row {
+    display: grid;
+    grid-template-columns: 56px 1fr;
+    align-items: center;
+    gap: 0.85rem;
+}
+
+.dash-bar-label {
+    font-size: 0.82rem;
+    font-weight: 500;
+    color: var(--ink-soft);
+    text-align: left;
+}
+
+.dash-bar-track {
+    height: 8px;
+    background: #e0e2e6;
+    border-radius: 999px;
+    overflow: hidden;
+}
+
+.dash-bar-fill {
+    height: 100%;
+    border-radius: 999px;
+    transition: width 0.6s ease;
+}
+
+.dash-bar-orange { background: #f0a500; }
+.dash-bar-blue   { background: #3b82f6; }
+.dash-bar-purple { background: #8b5cf6; }
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 600px) {
+    .hero-v2-title { font-size: 2.2rem; }
+    .hero-v2-subtitle br { display: none; }
+    .dash-stats { grid-template-columns: 1fr; }
+    .hero-v2-dashboard { padding: 1rem; }
+    .btn-hero-dark { width: 100%; text-align: center; }
+    .hero-v2-actions { flex-direction: column; align-items: stretch; }
+}
