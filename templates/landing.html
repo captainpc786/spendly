@@ -35,7 +35,7 @@
         <!-- CTA Buttons -->
         <div class="hero-v2-actions">
             <a href="{{ url_for('register') }}" class="btn-hero-dark">Create free account</a>
-            <a href="#" class="btn-hero-dark">See how it works</a>
+            <a href="#" class="btn-hero-dark" id="open-video-modal">See how it works</a>
         </div>
 
         <!-- Mock Dashboard -->
@@ -110,4 +110,144 @@
     </div>
 </section>
 
+<!-- ---------------------------------------------------------------- -->
+<!-- Video Modal                                                      -->
+<!-- ---------------------------------------------------------------- -->
+<div id="video-modal" class="vmodal-overlay" role="dialog" aria-modal="true" aria-label="How Spendly works" hidden>
+    <div class="vmodal-box">
+        <button class="vmodal-close" id="close-video-modal" aria-label="Close video">&times;</button>
+        <div class="vmodal-iframe-wrap">
+            <iframe
+                id="video-iframe"
+                src=""
+                data-src="https://www.youtube.com/embed/dQw4w9WgXcQ?autoplay=1"
+                title="How Spendly works"
+                frameborder="0"
+                allow="autoplay; encrypted-media"
+                allowfullscreen>
+            </iframe>
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block scripts %}
+<style>
+    /* Modal overlay */
+    .vmodal-overlay {
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.72);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        z-index: 1000;
+        padding: 1.5rem;
+        backdrop-filter: blur(4px);
+        animation: vmodal-fade-in 0.2s ease;
+    }
+
+    .vmodal-overlay[hidden] {
+        display: none;
+    }
+
+    @keyframes vmodal-fade-in {
+        from { opacity: 0; }
+        to   { opacity: 1; }
+    }
+
+    /* Modal box */
+    .vmodal-box {
+        position: relative;
+        width: 100%;
+        max-width: 800px;
+        background: #000;
+        border-radius: 14px;
+        overflow: hidden;
+        box-shadow: 0 24px 80px rgba(0,0,0,0.6);
+        animation: vmodal-slide-in 0.25s ease;
+    }
+
+    @keyframes vmodal-slide-in {
+        from { transform: translateY(24px); opacity: 0; }
+        to   { transform: translateY(0);   opacity: 1; }
+    }
+
+    /* 16:9 iframe wrapper */
+    .vmodal-iframe-wrap {
+        position: relative;
+        padding-bottom: 56.25%;
+        height: 0;
+    }
+
+    .vmodal-iframe-wrap iframe {
+        position: absolute;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        border: none;
+    }
+
+    /* Close button */
+    .vmodal-close {
+        position: absolute;
+        top: 0.6rem;
+        right: 0.75rem;
+        z-index: 10;
+        background: rgba(255,255,255,0.15);
+        color: #fff;
+        border: none;
+        border-radius: 50%;
+        width: 32px;
+        height: 32px;
+        font-size: 1.3rem;
+        line-height: 1;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        transition: background 0.2s;
+    }
+
+    .vmodal-close:hover {
+        background: rgba(255,255,255,0.3);
+    }
+</style>
+
+<script>
+(function () {
+    var overlay  = document.getElementById('video-modal');
+    var iframe   = document.getElementById('video-iframe');
+    var openBtn  = document.getElementById('open-video-modal');
+    var closeBtn = document.getElementById('close-video-modal');
+    var videoSrc = iframe.dataset.src;
+
+    function openModal(e) {
+        e.preventDefault();
+        iframe.src = videoSrc;    /* load & autoplay */
+        overlay.hidden = false;
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal() {
+        iframe.src = '';          /* stop video immediately */
+        overlay.hidden = true;
+        document.body.style.overflow = '';
+    }
+
+    openBtn.addEventListener('click', openModal);
+    closeBtn.addEventListener('click', closeModal);
+
+    /* Click outside modal box closes it */
+    overlay.addEventListener('click', function (e) {
+        if (e.target === overlay) closeModal();
+    });
+
+    /* Escape key closes it */
+    document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && !overlay.hidden) closeModal();
+    });
+}());
+</script>
 {% endblock %}
