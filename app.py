@@ -1,13 +1,10 @@
-import re
-from flask import Flask, render_template, request, redirect, url_for, flash
-from werkzeug.security import generate_password_hash
-
-from database.db import get_db, init_db
+from flask import Flask, render_template
+from database.db import init_db
 
 app = Flask(__name__)
-app.secret_key = 'spendly-dev-secret-key-change-in-production'
+app.secret_key = "dev-secret-key-change-in-production"
 
-# Ensure all tables exist on startup (safe — uses CREATE TABLE IF NOT EXISTS)
+# Create tables on first run
 with app.app_context():
     init_db()
 
