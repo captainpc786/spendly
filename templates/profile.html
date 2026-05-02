@@ -1,0 +1,132 @@
+{# templates/profile.html #}
+{% extends "base.html" %}
+
+{% block title %}My Profile — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/profile.css') }}">
+{% endblock %}
+
+{% block content %}
+<div class="profile-page">
+
+  {# ── Page header ────────────────────────────────────────────────── #}
+  <header class="profile-header">
+    <div class="profile-header-left">
+      <p class="profile-since">Member since {{ user["created_at"][:7] }}</p>
+      <h1 class="profile-greeting">Hello, {{ user["username"] }}!</h1>
+    </div>
+    <a href="{{ url_for('add_expense') }}" class="btn-primary profile-add-btn">
+      <i data-lucide="plus-circle"></i>
+      Add Expense
+    </a>
+  </header>
+
+  {# ── Summary stat cards ─────────────────────────────────────────── #}
+  <section class="profile-stats" aria-label="Monthly summary">
+
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="wallet"></i></div>
+      <p class="stat-label">Total Spent This Month</p>
+      <p class="stat-value">₹{{ "{:,.2f}".format(summary.total_amount) }}</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="receipt"></i></div>
+      <p class="stat-label">Expenses This Month</p>
+      <p class="stat-value">{{ summary.expense_count }}</p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="tag"></i></div>
+      <p class="stat-label">Top Category</p>
+      <p class="stat-value">
+        {% if summary.categories %}
+          {{ summary.categories[0]["category_name"] }}
+        {% else %}
+          —
+        {% endif %}
+      </p>
+    </div>
+
+  </section>
+
+  {# ── Category breakdown ─────────────────────────────────────────── #}
+  <section class="profile-breakdown">
+    <div class="breakdown-card">
+
+      <div class="breakdown-header">
+        <h2 class="breakdown-title">
+          <i data-lucide="pie-chart"></i>
+          Spending by Category
+        </h2>
+        <span class="breakdown-month">
+          <i data-lucide="calendar"></i>
+          This month
+        </span>
+      </div>
+
+      {% if summary.expense_count == 0 %}
+
+        {# ── Empty state ──────────────────────────────────────────── #}
+        <div class="profile-empty">
+          <div class="empty-icon">
+            <i data-lucide="inbox"></i>
+          </div>
+          <p class="empty-title">No expenses yet this month</p>
+          <p class="empty-body">
+            Start tracking your spending — add your first expense below.
+          </p>
+          <a href="{{ url_for('add_expense') }}" class="btn-primary">
+            <i data-lucide="plus-circle"></i>
+            Add your first expense
+          </a>
+        </div>
+
+      {% else %}
+
+        {# ── Category breakdown table ──────────────────────────────── #}
+        <div class="breakdown-table-wrap">
+          <table class="breakdown-table" aria-label="Category breakdown">
+            <thead>
+              <tr>
+                <th class="col-cat">Category</th>
+                <th class="col-bar" aria-hidden="true"></th>
+                <th class="col-amt">Amount</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for row in summary.categories %}
+              {% set pct = (row["category_total"] / summary.total_amount * 100) | round(1) %}
+              <tr>
+                <td class="col-cat">
+                  <span class="cat-dot"></span>
+                  {{ row["category_name"] }}
+                </td>
+                <td class="col-bar" aria-hidden="true">
+                  <div class="bar-track">
+                    <div class="bar-fill" style="width: {{ pct }}%"></div>
+                  </div>
+                </td>
+                <td class="col-amt">₹{{ "{:,.2f}".format(row["category_total"]) }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      {% endif %}
+
+    </div>
+  </section>
+
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    lucide.createIcons();
+  });
+</script>
+{% endblock %}

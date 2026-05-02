@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, flash, redirect, url_for, session
-from database.db import init_db, get_db, get_user_by_email
+from database.db import init_db, get_db, get_user_by_email, get_user_by_id, get_expense_summary
 import re
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -23,7 +23,7 @@ def landing():
 @app.route("/register", methods=["GET", "POST"])
 def register():
     if session.get("user_id"):
-        return redirect(url_for("landing"))
+        return redirect(url_for("profile"))
 
     if request.method == "GET":
         return render_template("register.html")
@@ -81,7 +81,7 @@ def register():
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if session.get("user_id"):
-        return redirect(url_for("landing"))
+        return redirect(url_for("profile"))
 
     if request.method == "GET":
         return render_template("login.html")
@@ -93,8 +93,7 @@ def login():
     if user and check_password_hash(user["password_hash"], password):
         session.clear()
         session["user_id"] = user["id"]
-        flash("Welcome back!", "success")
-        return redirect(url_for("landing"))
+        return redirect(url_for("profile"))
 
     flash("Invalid email or password.", "error")
     return render_template("login.html")
@@ -123,7 +122,14 @@ def logout():
 
 @app.route("/profile")
 def profile():
-    return "Profile page — coming in Step 4"
+    user_id = session.get("user_id")
+    if not user_id:
+        flash("Please log in to view your profile.", "error")
+        return redirect(url_for("login"))
+
+    user    = get_user_by_id(user_id)
+    summary = get_expense_summary(user_id)
+    return render_template("profile.html", user=user, summary=summary)
 
 
 @app.route("/expenses/add")
