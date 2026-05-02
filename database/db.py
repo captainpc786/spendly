@@ -24,6 +24,71 @@ def get_user_by_email(email):
         conn.close()
 
 
+def get_user_by_id(user_id):
+    """Return the user row matching the given primary key, or None."""
+    conn = get_db()
+    try:
+        return conn.execute(
+            "SELECT id, username, email, created_at FROM users WHERE id = ?",
+            (user_id,),
+        ).fetchone()
+    finally:
+        conn.close()
+
+
+def get_expense_summary(user_id):
+    """
+    Return spending totals for the current calendar month.
+
+    Returns a dict with keys:
+      - total_amount  : float  (0.0 when no expenses exist)
+      - expense_count : int    (0 when no expenses exist)
+      - categories    : list of sqlite3.Row  (category_name, category_total)
+
+    Month filter is performed entirely in SQL via strftime — never in Python.
+    """
+    conn = get_db()
+    try:
+        current_month = conn.execute(
+            "SELECT strftime('%Y-%m', 'now')"
+        ).fetchone()[0]
+
+        totals = conn.execute(
+            """
+            SELECT
+                COALESCE(SUM(amount), 0) AS total_amount,
+                COUNT(*)                 AS expense_count
+            FROM expenses
+            WHERE user_id = ?
+              AND strftime('%Y-%m', date) = ?
+            """,
+            (user_id, current_month),
+        ).fetchone()
+
+        categories = conn.execute(
+            """
+            SELECT
+                COALESCE(c.name, 'Uncategorised') AS category_name,
+                SUM(e.amount)                      AS category_total
+            FROM expenses e
+            LEFT JOIN categories c ON c.id = e.category_id
+            WHERE e.user_id = ?
+              AND strftime('%Y-%m', e.date) = ?
+            GROUP BY COALESCE(c.name, 'Uncategorised')
+            ORDER BY category_total DESC
+            """,
+            (user_id, current_month),
+        ).fetchall()
+
+        return {
+            "total_amount":  totals["total_amount"],
+            "expense_count": totals["expense_count"],
+            "categories":    categories,
+        }
+    finally:
+        conn.close()
+
+
 def init_db():
     """Create all tables using CREATE TABLE IF NOT EXISTS."""
     conn = get_db()
