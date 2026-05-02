@@ -13,6 +13,17 @@ def get_db():
     return conn
 
 
+def get_user_by_email(email):
+    """Return the user row matching email (case-insensitive), or None."""
+    conn = get_db()
+    try:
+        return conn.execute(
+            "SELECT * FROM users WHERE email = ?", (email.strip().lower(),)
+        ).fetchone()
+    finally:
+        conn.close()
+
+
 def init_db():
     """Create all tables using CREATE TABLE IF NOT EXISTS."""
     conn = get_db()
