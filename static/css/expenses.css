@@ -1,0 +1,236 @@
+/* ------------------------------------------------------------------ */
+/* expenses.css — Expense form + transaction table styles              */
+/* ------------------------------------------------------------------ */
+
+/* Optional label hint */
+.form-optional {
+    font-size: 0.78rem;
+    color: var(--ink-faint);
+    font-weight: 400;
+}
+
+/* ------------------------------------------------------------------ */
+/* Transaction history section                                         */
+/* ------------------------------------------------------------------ */
+
+.profile-transactions {
+    max-width: var(--max-width);
+    margin: 0 auto 3rem;
+    padding: 0 2rem;
+}
+
+.txn-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
+}
+
+.txn-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.txn-title {
+    font-family: var(--font-display);
+    font-size: 1.15rem;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.txn-title svg {
+    width: 18px;
+    height: 18px;
+    color: var(--accent);
+}
+
+.txn-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.85rem;
+    padding: 0.45rem 0.9rem;
+}
+
+.txn-add-btn svg {
+    width: 14px;
+    height: 14px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Transaction table                                                   */
+/* ------------------------------------------------------------------ */
+
+.txn-table-wrap {
+    overflow-x: auto;
+}
+
+.txn-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9rem;
+}
+
+.txn-table thead {
+    background: var(--paper-warm);
+}
+
+.txn-table th {
+    padding: 0.7rem 1.25rem;
+    text-align: left;
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--ink-muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+}
+
+.txn-table td {
+    padding: 0.85rem 1.25rem;
+    border-bottom: 1px solid var(--border-soft);
+    color: var(--ink-soft);
+    vertical-align: middle;
+}
+
+.txn-row:last-child td { border-bottom: none; }
+
+.txn-row:hover td { background: var(--paper); }
+
+/* Column widths */
+.txn-col-date  { white-space: nowrap; color: var(--ink-muted); font-size: 0.85rem; }
+.txn-col-amt   { text-align: right; font-weight: 600; color: var(--ink); white-space: nowrap; }
+.txn-col-actions {
+    text-align: right;
+    white-space: nowrap;
+    width: 120px;
+}
+
+/* Category badge */
+.txn-cat-badge {
+    display: inline-block;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 0.75rem;
+    font-weight: 500;
+    padding: 0.2rem 0.6rem;
+    border-radius: 999px;
+}
+
+/* ------------------------------------------------------------------ */
+/* Action buttons (small variants)                                     */
+/* ------------------------------------------------------------------ */
+
+.btn-sm {
+    padding: 0.3rem 0.75rem !important;
+    font-size: 0.8rem !important;
+}
+
+/* ── Delete button — impressive variant ─────────────────────────── */
+
+@keyframes btn-shake {
+    0%, 100% { transform: translateX(0); }
+    20%       { transform: translateX(-3px) rotate(-2deg); }
+    40%       { transform: translateX(3px)  rotate(2deg);  }
+    60%       { transform: translateX(-2px) rotate(-1deg); }
+    80%       { transform: translateX(2px)  rotate(1deg);  }
+}
+
+.btn-danger-sm {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    background: transparent;
+    color: var(--danger);
+    border: 1.5px solid var(--danger);
+    border-radius: var(--radius-sm);
+    font-family: var(--font-body);
+    font-size: 0.78rem;
+    font-weight: 600;
+    padding: 0.3rem 0.7rem;
+    cursor: pointer;
+    letter-spacing: 0.01em;
+    position: relative;
+    overflow: hidden;
+    transition: color 0.22s ease, box-shadow 0.22s ease;
+}
+
+/* sliding red fill */
+.btn-danger-sm::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--danger);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.22s ease;
+    z-index: 0;
+}
+
+.btn-danger-sm:hover::before  { transform: scaleX(1); }
+.btn-danger-sm:hover {
+    color: #fff;
+    box-shadow: 0 4px 14px rgba(192, 57, 43, 0.35);
+    animation: btn-shake 0.4s ease;
+}
+
+.btn-danger-sm svg,
+.btn-danger-sm span {
+    position: relative;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.btn-danger-sm svg {
+    width: 13px;
+    height: 13px;
+    flex-shrink: 0;
+}
+
+.txn-delete-form {
+    display: inline;
+    margin-left: 0.4rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* Empty state                                                         */
+/* ------------------------------------------------------------------ */
+
+.txn-empty {
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--ink-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.txn-empty svg {
+    width: 36px;
+    height: 36px;
+    color: var(--ink-faint);
+}
+
+.txn-empty p { font-size: 0.95rem; }
+
+.txn-empty a {
+    color: var(--accent);
+    font-weight: 500;
+    text-decoration: underline;
+}
+
+/* ------------------------------------------------------------------ */
+/* Responsive                                                          */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+    .txn-col-desc { display: none; }
+    .txn-header   { flex-direction: column; gap: 0.75rem; align-items: flex-start; }
+}

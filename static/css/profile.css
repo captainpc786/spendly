@@ -1,10 +1,10 @@
 /* static/css/profile.css */
-/* Profile / dashboard page — all rules scoped to .profile-page */
+/* Profile / dashboard page */
 
 /* ── Page layout ───────────────────────────────────────────────────── */
 
 .profile-page {
-    max-width: 900px;
+    max-width: 960px;
     margin: 0 auto;
     padding: 3rem 2rem 4rem;
     display: flex;
@@ -44,17 +44,13 @@
     flex-shrink: 0;
     white-space: nowrap;
 }
-
-.profile-add-btn svg {
-    width: 18px;
-    height: 18px;
-}
+.profile-add-btn svg { width: 18px; height: 18px; }
 
 /* ── Stat cards ────────────────────────────────────────────────────── */
 
 .profile-stats {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 1rem;
 }
 
@@ -62,30 +58,19 @@
     background: var(--paper-card);
     border: 1px solid var(--border);
     border-radius: var(--radius-md);
-    padding: 1.5rem;
+    padding: 1.4rem 1.5rem;
     display: flex;
     flex-direction: column;
-    gap: 0.5rem;
+    gap: 0.4rem;
     transition: box-shadow 0.2s;
 }
-
-.stat-card:hover {
-    box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
-}
-
-.stat-icon {
-    color: var(--accent);
-    margin-bottom: 0.25rem;
-}
-
-.stat-icon svg {
-    width: 22px;
-    height: 22px;
-}
+.stat-card:hover { box-shadow: 0 2px 12px rgba(0,0,0,0.06); }
+.stat-icon { color: var(--accent); margin-bottom: 0.25rem; }
+.stat-icon svg { width: 20px; height: 20px; }
 
 .stat-label {
-    font-size: 0.8rem;
-    font-weight: 500;
+    font-size: 0.75rem;
+    font-weight: 600;
     color: var(--ink-muted);
     text-transform: uppercase;
     letter-spacing: 0.05em;
@@ -93,7 +78,7 @@
 
 .stat-value {
     font-family: var(--font-display);
-    font-size: 1.65rem;
+    font-size: 1.55rem;
     color: var(--ink);
     font-variant-numeric: tabular-nums;
     line-height: 1.2;
@@ -125,12 +110,7 @@
     align-items: center;
     gap: 0.5rem;
 }
-
-.breakdown-title svg {
-    width: 18px;
-    height: 18px;
-    color: var(--accent);
-}
+.breakdown-title svg { width: 18px; height: 18px; color: var(--accent); }
 
 .breakdown-month {
     font-size: 0.8rem;
@@ -140,17 +120,9 @@
     align-items: center;
     gap: 0.35rem;
 }
+.breakdown-month svg { width: 14px; height: 14px; }
 
-.breakdown-month svg {
-    width: 14px;
-    height: 14px;
-}
-
-/* ── Category table ────────────────────────────────────────────────── */
-
-.breakdown-table-wrap {
-    overflow-x: auto;
-}
+.breakdown-table-wrap { overflow-x: auto; }
 
 .breakdown-table {
     width: 100%;
@@ -173,19 +145,10 @@
     border-bottom: 1px solid var(--border-soft);
     transition: background 0.15s;
 }
+.breakdown-table tbody tr:last-child { border-bottom: none; }
+.breakdown-table tbody tr:hover { background: var(--paper-warm); }
 
-.breakdown-table tbody tr:last-child {
-    border-bottom: none;
-}
-
-.breakdown-table tbody tr:hover {
-    background: var(--paper-warm);
-}
-
-.breakdown-table td {
-    padding: 0.9rem 1.5rem;
-    vertical-align: middle;
-}
+.breakdown-table td { padding: 0.9rem 1.5rem; vertical-align: middle; }
 
 td.col-cat {
     display: flex;
@@ -205,11 +168,7 @@ td.col-cat {
     flex-shrink: 0;
 }
 
-td.col-bar {
-    width: 45%;
-    padding-left: 0;
-    padding-right: 1.5rem;
-}
+td.col-bar { width: 45%; padding-left: 0; padding-right: 1.5rem; }
 
 .bar-track {
     height: 6px;
@@ -244,16 +203,8 @@ td.col-amt {
     align-items: center;
     gap: 0.75rem;
 }
-
-.empty-icon {
-    color: var(--border);
-    margin-bottom: 0.5rem;
-}
-
-.empty-icon svg {
-    width: 48px;
-    height: 48px;
-}
+.empty-icon { color: var(--border); margin-bottom: 0.5rem; }
+.empty-icon svg { width: 48px; height: 48px; }
 
 .empty-title {
     font-family: var(--font-display);
@@ -274,25 +225,181 @@ td.col-amt {
     gap: 0.45rem;
     margin-top: 0.5rem;
 }
+.profile-empty .btn-primary svg { width: 16px; height: 16px; }
 
-.profile-empty .btn-primary svg {
-    width: 16px;
-    height: 16px;
+/* ================================================================== */
+/* TRANSACTION HISTORY — premium fintech feed                          */
+/* ================================================================== */
+
+.profile-transactions { width: 100%; }
+
+.txn-card {
+    background: var(--paper-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    overflow: hidden;
 }
+
+/* Header */
+.txn-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid var(--border-soft);
+}
+
+.txn-title {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0;
+}
+.txn-title svg { width: 18px; height: 18px; color: var(--accent); }
+
+.txn-add-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    font-size: 0.82rem !important;
+    padding: 0.4rem 0.9rem !important;
+}
+.txn-add-btn svg { width: 14px; height: 14px; }
+
+/* ── Row list (no table) ───────────────────────────────────────────── */
+
+.txn-table-wrap { overflow: hidden; }
+
+.txn-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.txn-table thead { display: none; }
+
+.txn-row {
+    display: grid;
+    grid-template-columns: 48px 1fr auto auto;
+    align-items: center;
+    gap: 0 1.25rem;
+    padding: 1rem 1.5rem;
+    border-bottom: 1px solid var(--border-soft);
+    transition: background 0.15s;
+}
+.txn-row:last-child { border-bottom: none; }
+.txn-row:hover { background: var(--paper); }
+
+/* Avatar cell */
+.txn-col-cat {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.txn-cat-badge {
+    width: 42px;
+    height: 42px;
+    border-radius: 10px;
+    background: var(--accent-light);
+    color: var(--accent);
+    font-size: 0.65rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.03em;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    line-height: 1.2;
+    padding: 0.2rem;
+    flex-shrink: 0;
+}
+
+/* Per-category colours */
+.txn-cat-badge[data-cat="Food"]          { background: #fff3e0; color: #e65100; }
+.txn-cat-badge[data-cat="Travel"]        { background: #e3f2fd; color: #1565c0; }
+.txn-cat-badge[data-cat="Bills"]         { background: #fce4ec; color: #c62828; }
+.txn-cat-badge[data-cat="Shopping"]      { background: #f3e5f5; color: #6a1b9a; }
+.txn-cat-badge[data-cat="Health"]        { background: #e8f5e9; color: #2e7d32; }
+.txn-cat-badge[data-cat="Entertainment"] { background: #fff8e1; color: #f57f17; }
+.txn-cat-badge[data-cat="Other"]         { background: var(--paper-warm); color: var(--ink-muted); }
+.txn-cat-badge[data-cat="Uncategorised"] { background: var(--paper-warm); color: var(--ink-faint); }
+
+/* Description + date two-line cell */
+.txn-col-date { display: none; }
+
+.txn-col-desc {
+    display: flex;
+    flex-direction: column;
+    gap: 0.2rem;
+    overflow: hidden;
+    min-width: 0;
+}
+
+.txn-desc-text {
+    font-size: 0.9rem;
+    font-weight: 500;
+    color: var(--ink);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.txn-desc-meta {
+    font-size: 0.75rem;
+    color: var(--ink-faint);
+    white-space: nowrap;
+}
+
+/* Amount */
+.txn-col-amt {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--ink);
+    font-variant-numeric: tabular-nums;
+    white-space: nowrap;
+    text-align: right;
+}
+
+/* Actions */
+.txn-col-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.35rem;
+    white-space: nowrap;
+}
+
+/* Empty state */
+.txn-empty {
+    padding: 3rem 2rem;
+    text-align: center;
+    color: var(--ink-muted);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.6rem;
+}
+.txn-empty svg { width: 36px; height: 36px; color: var(--ink-faint); }
+.txn-empty p   { font-size: 0.9rem; }
+.txn-empty a   { color: var(--accent); font-weight: 500; }
 
 /* ── Responsive ────────────────────────────────────────────────────── */
 
-@media (max-width: 640px) {
-    .profile-stats {
-        grid-template-columns: 1fr;
-    }
+@media (max-width: 700px) {
+    .profile-stats { grid-template-columns: repeat(2, 1fr); }
 
-    .profile-header {
-        flex-direction: column;
-        align-items: flex-start;
+    .txn-row {
+        grid-template-columns: 42px 1fr auto;
+        padding: 0.75rem 1rem;
+        gap: 0 0.75rem;
     }
+    .txn-col-actions { display: none; }
+}
 
-    .profile-page {
-        padding: 2rem 1rem 3rem;
-    }
+@media (max-width: 480px) {
+    .profile-header { flex-direction: column; align-items: flex-start; }
+    .profile-page   { padding: 2rem 1rem 3rem; }
 }

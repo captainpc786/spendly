@@ -27,13 +27,13 @@
 
     <div class="stat-card">
       <div class="stat-icon"><i data-lucide="wallet"></i></div>
-      <p class="stat-label">Total Spent This Month</p>
-      <p class="stat-value">₹{{ "{:,.2f}".format(summary.total_amount) }}</p>
+      <p class="stat-label">Total Spent (All Time)</p>
+      <p class="stat-value">{{ summary.total_amount | format_inr }}</p>
     </div>
 
     <div class="stat-card">
       <div class="stat-icon"><i data-lucide="receipt"></i></div>
-      <p class="stat-label">Expenses This Month</p>
+      <p class="stat-label">Total Expenses</p>
       <p class="stat-value">{{ summary.expense_count }}</p>
     </div>
 
@@ -45,6 +45,18 @@
           {{ summary.categories[0]["category_name"] }}
         {% else %}
           —
+        {% endif %}
+      </p>
+    </div>
+
+    <div class="stat-card">
+      <div class="stat-icon"><i data-lucide="trending-down"></i></div>
+      <p class="stat-label">Avg per Expense</p>
+      <p class="stat-value">
+        {% if summary.expense_count > 0 %}
+          {{ (summary.total_amount / summary.expense_count) | format_inr }}
+        {% else %}
+          ₹0.00
         {% endif %}
       </p>
     </div>
@@ -62,7 +74,7 @@
         </h2>
         <span class="breakdown-month">
           <i data-lucide="calendar"></i>
-          This month
+          All time
         </span>
       </div>
 
@@ -73,7 +85,7 @@
           <div class="empty-icon">
             <i data-lucide="inbox"></i>
           </div>
-          <p class="empty-title">No expenses yet this month</p>
+          <p class="empty-title">No expenses yet</p>
           <p class="empty-body">
             Start tracking your spending — add your first expense below.
           </p>
@@ -108,11 +120,87 @@
                     <div class="bar-fill" style="width: {{ pct }}%"></div>
                   </div>
                 </td>
-                <td class="col-amt">₹{{ "{:,.2f}".format(row["category_total"]) }}</td>
+                <td class="col-amt">{{ row["category_total"] | format_inr }}</td>
               </tr>
               {% endfor %}
             </tbody>
           </table>
+        </div>
+
+      {% endif %}
+
+    </div>
+  </section>
+
+  {# ── Transaction history ─────────────────────────────────────────── #}
+  <section class="profile-transactions">
+    <div class="txn-card">
+
+      <div class="txn-header">
+        <h2 class="txn-title">
+          <i data-lucide="list"></i>
+          All Transactions
+        </h2>
+        <a href="{{ url_for('add_expense') }}" class="btn-primary txn-add-btn">
+          <i data-lucide="plus"></i>
+          Add
+        </a>
+      </div>
+
+      {% if expenses %}
+
+        <div class="txn-table-wrap">
+          <table class="txn-table" aria-label="Transaction history">
+            <thead>
+              <tr>
+                <th class="txn-col-date">Date</th>
+                <th class="txn-col-cat">Category</th>
+                <th class="txn-col-desc">Description</th>
+                <th class="txn-col-amt">Amount</th>
+                <th class="txn-col-actions" aria-label="Actions"></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for e in expenses %}
+              <tr class="txn-row">
+                <td class="txn-col-cat">
+                  <span class="txn-cat-badge" data-cat="{{ e['category_name'] }}">
+                    {{ e["category_name"][:3] }}
+                  </span>
+                </td>
+                <td class="txn-col-desc">
+                  <span class="txn-desc-text">{{ e["description"] or "—" }}</span>
+                  <span class="txn-desc-meta">{{ e["date"] }} &nbsp;·&nbsp; {{ e["category_name"] }}</span>
+                </td>
+                <td class="txn-col-amt">−&nbsp;{{ e["amount"] | format_inr }}</td>
+                <td class="txn-col-actions">
+                  <a href="{{ url_for('edit_expense', id=e['id']) }}"
+                     class="btn-ghost btn-sm"
+                     aria-label="Edit expense">Edit</a>
+                  <form method="POST"
+                        action="{{ url_for('delete_expense', id=e['id']) }}"
+                        class="txn-delete-form"
+                        onsubmit="return confirm('Delete this expense?')">
+                    <button type="submit"
+                            class="btn-danger-sm"
+                            aria-label="Delete expense">
+                      <i data-lucide="trash-2"></i>
+                      <span>Delete</span>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+
+      {% else %}
+
+        <div class="txn-empty">
+          <i data-lucide="inbox"></i>
+          <p>No transactions recorded yet.</p>
+          <a href="{{ url_for('add_expense') }}">Add your first expense →</a>
         </div>
 
       {% endif %}
