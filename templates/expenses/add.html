@@ -1,0 +1,97 @@
+{# templates/expenses/add.html #}
+{% extends "base.html" %}
+
+{% block title %}Add Expense — Spendly{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="{{ url_for('static', filename='css/expenses.css') }}">
+{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+  <div class="auth-container">
+
+    <div class="auth-header">
+      <h1 class="auth-title">Add Expense</h1>
+      <p class="auth-subtitle">Track a new spending entry</p>
+    </div>
+
+    <div class="auth-card">
+      <form method="POST" action="{{ url_for('add_expense') }}" novalidate>
+
+        <div class="form-group">
+          <label for="amount">Amount (₹)</label>
+          <input
+            id="amount"
+            name="amount"
+            type="number"
+            step="0.01"
+            min="0.01"
+            class="form-input"
+            placeholder="0.00"
+            value="{{ amount or '' }}"
+            required
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="category_id">Category</label>
+          <select id="category_id" name="category_id" class="form-input">
+            <option value="">— Select category —</option>
+            {% for cat in categories %}
+            <option value="{{ cat.id }}"
+              {% if category_id|string == cat.id|string %}selected{% endif %}>
+              {{ cat.name }}
+            </option>
+            {% endfor %}
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="description">
+            Description
+            <span class="form-optional">(optional)</span>
+          </label>
+          <input
+            id="description"
+            name="description"
+            type="text"
+            maxlength="255"
+            class="form-input"
+            placeholder="e.g. Lunch at Subway"
+            value="{{ description or '' }}"
+          >
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input
+            id="date"
+            name="date"
+            type="date"
+            class="form-input"
+            value="{{ date or today }}"
+            required
+          >
+        </div>
+
+        <button type="submit" class="btn-submit">Add Expense</button>
+
+      </form>
+    </div>
+
+    <p class="auth-switch">
+      <a href="{{ url_for('profile') }}">← Back to profile</a>
+    </p>
+
+  </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+  document.addEventListener("DOMContentLoaded", function () {
+    lucide.createIcons();
+  });
+</script>
+{% endblock %}

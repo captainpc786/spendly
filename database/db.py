@@ -38,21 +38,15 @@ def get_user_by_id(user_id):
 
 def get_expense_summary(user_id):
     """
-    Return spending totals for the current calendar month.
+    Return all-time spending totals for a user.
 
     Returns a dict with keys:
       - total_amount  : float  (0.0 when no expenses exist)
       - expense_count : int    (0 when no expenses exist)
       - categories    : list of sqlite3.Row  (category_name, category_total)
-
-    Month filter is performed entirely in SQL via strftime — never in Python.
     """
     conn = get_db()
     try:
-        current_month = conn.execute(
-            "SELECT strftime('%Y-%m', 'now')"
-        ).fetchone()[0]
-
         totals = conn.execute(
             """
             SELECT
@@ -60,9 +54,8 @@ def get_expense_summary(user_id):
                 COUNT(*)                 AS expense_count
             FROM expenses
             WHERE user_id = ?
-              AND strftime('%Y-%m', date) = ?
             """,
-            (user_id, current_month),
+            (user_id,),
         ).fetchone()
 
         categories = conn.execute(
@@ -73,11 +66,10 @@ def get_expense_summary(user_id):
             FROM expenses e
             LEFT JOIN categories c ON c.id = e.category_id
             WHERE e.user_id = ?
-              AND strftime('%Y-%m', e.date) = ?
             GROUP BY COALESCE(c.name, 'Uncategorised')
             ORDER BY category_total DESC
             """,
-            (user_id, current_month),
+            (user_id,),
         ).fetchall()
 
         return {
@@ -85,6 +77,102 @@ def get_expense_summary(user_id):
             "expense_count": totals["expense_count"],
             "categories":    categories,
         }
+    finally:
+        conn.close()
+
+
+def get_all_expenses(user_id):
+    """Return all expenses for the given user, most-recent first."""
+    conn = get_db()
+    try:
+        return conn.execute(
+            """
+            SELECT
+                e.id,
+                e.amount,
+                e.description,
+                e.date,
+                COALESCE(c.name, 'Uncategorised') AS category_name
+            FROM expenses e
+            LEFT JOIN categories c ON c.id = e.category_id
+            WHERE e.user_id = ?
+            ORDER BY e.date DESC, e.created_at DESC
+            """,
+            (user_id,),
+        ).fetchall()
+    finally:
+        conn.close()
+
+
+def get_all_categories():
+    """Return all category rows ordered by name."""
+    conn = get_db()
+    try:
+        return conn.execute(
+            "SELECT id, name FROM categories ORDER BY name ASC"
+        ).fetchall()
+    finally:
+        conn.close()
+
+
+def get_expense_by_id(expense_id, user_id):
+    """Return a single expense row only if it belongs to user_id (IDOR-safe), or None."""
+    conn = get_db()
+    try:
+        return conn.execute(
+            """
+            SELECT e.id, e.amount, e.category_id, e.description, e.date
+            FROM expenses e
+            WHERE e.id = ? AND e.user_id = ?
+            """,
+            (expense_id, user_id),
+        ).fetchone()
+    finally:
+        conn.close()
+
+
+def add_expense(user_id, amount, category_id, description, date):
+    """Insert one expense row for the given user."""
+    conn = get_db()
+    try:
+        conn.execute(
+            """
+            INSERT INTO expenses (user_id, amount, category_id, description, date)
+            VALUES (?, ?, ?, ?, ?)
+            """,
+            (user_id, amount, category_id, description, date),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def update_expense(expense_id, user_id, amount, category_id, description, date):
+    """Update an expense row, scoped to the owning user."""
+    conn = get_db()
+    try:
+        conn.execute(
+            """
+            UPDATE expenses
+            SET amount = ?, category_id = ?, description = ?, date = ?
+            WHERE id = ? AND user_id = ?
+            """,
+            (amount, category_id, description, date, expense_id, user_id),
+        )
+        conn.commit()
+    finally:
+        conn.close()
+
+
+def delete_expense(expense_id, user_id):
+    """Delete an expense row, scoped to the owning user."""
+    conn = get_db()
+    try:
+        conn.execute(
+            "DELETE FROM expenses WHERE id = ? AND user_id = ?",
+            (expense_id, user_id),
+        )
+        conn.commit()
     finally:
         conn.close()
 
